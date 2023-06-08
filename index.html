@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Janokee Secret Site</title>
+    <title>Main Menu</title>
     <style>
       body {
         background-color: lightgrey;
+        font-family: Arial, sans-serif;
       }
-      #secret-text {
-        font-size: 8em;
+      h1 {
+        font-size: 5em;
         text-align: center;
         margin-top: 100px;
-        background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+        color: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         font-weight: 100;
       }
-      #location-button {
+      .button {
         display: block;
         margin: 0 auto;
         margin-top: 50px;
@@ -30,10 +31,10 @@
     </style>
   </head>
   <body>
-    <div id="secret-text">
-      Janokee Secret Site
-    </div>
-    <button id="location-button" onclick="getLocation()">Who am I</button>
+    <h1>Main Menu</h1>
+    <div class="button" onclick="getLocation()">Show IP Location</div>
+    <div class="button" onclick="window.location.href='https://www.roblox.com/'">Open Roblox.com</div>
+    <div class="button" onclick="sendToDiscord()">Send to Discord</div>
 
     <script>
       function getLocation() {
@@ -41,6 +42,25 @@
           .then(response => response.json())
           .then(data => alert(`Your location is: ${data.city}, ${data.region}, ${data.country_name}`))
           .catch(error => console.log(error));
+      }
+
+      function sendToDiscord() {
+        let message = prompt("Enter a message to send to Discord:");
+        if (message) {
+          let webhookUrl = "https://discord.com/api/webhooks/your-webhook-url-here";
+          let payload = {
+            "content": message
+          };
+          fetch(webhookUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+          })
+          .then(response => console.log(response))
+          .catch(error => console.log(error));
+        }
       }
     </script>
   </body>
